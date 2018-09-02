@@ -1,0 +1,22 @@
+{
+  "name": "wouso-test-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:razvanch/wouso-test-app.git",
+    "type": "git"
+  },
+  "author": "Razvan Chitu <razvan.m.chitu@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "sequelize": "^4.37.10",
+    "sequelize-cli": "^4.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon --ignore wouso-core-backend server.js"
+  }
+}
