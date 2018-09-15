@@ -12,9 +12,13 @@ sessionsRouter.get('/', async (req, res) => {
   res.json(sessionRecord)
 })
 
-sessionsRouter.post('/', async (req, res) => {
+sessionsRouter.post('/', async (req, res, next) => {
   const { name, questions } = req.body
   const { id: adminId } = req.session.user
+
+  // Quiz must have exactly 10 questions
+  if (questions.length !== 10) return next({ status: 400 })
+
   const session = await Session.create({
     adminId,
     name
