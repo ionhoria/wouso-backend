@@ -2,12 +2,20 @@ const express = require('express')
 const Sequelize = require('sequelize')
 const { logger } = require('../index')
 const { Session, Question } = require('../models/session_question')
+const ActiveSession = require('../models/activeSession')
 
 const sessionsRouter = express.Router()
 
 sessionsRouter.get('/', async (req, res) => {
+  const userId = req.session.user.id
   const sessionRecord = await Session.findAll({
-    attributes: ['id', 'adminId', 'name']
+    attributes: ['id', 'adminId', 'name'],
+    include: {
+      model: ActiveSession,
+      required: false,
+      where: { userId },
+      attributes: ['question', 'createdAt']
+    }
   })
   res.json(sessionRecord)
 })

@@ -25,7 +25,9 @@ const ActiveSession = db.define('thActiveSession', {
 ActiveSession.belongsTo(Session, {
   foreignKey: 'sessionId'
 })
+Session.hasMany(ActiveSession, { foreignKey: 'sessionId' })
 
 ActiveSession.sync()
+Session.sync()
 
 module.exports = ActiveSession
