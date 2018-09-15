@@ -117,7 +117,6 @@ router.get(
   '/',
   catchAll(async (req, res, next) => {
     const apps = {
-      'wouso-test-app': 'wouso-test-app',
       'wouso-treasure-hunt': 'wouso-treasure-hunt',
       ...(await getApps())
     }
@@ -190,7 +189,7 @@ router.delete(
 const setupModules = async () => {
   forOwn(await getApps(), (url, name) => mountApp(name, url))
 
-  mountLocalApp('wouso-test-app', '../../local_apps/wouso-test-app')
+  // mountLocalApp('wouso-test-app', '../../local_apps/wouso-test-app')
   mountLocalApp('wouso-treasure-hunt', '../../local_apps/wouso-treasure-hunt')
 }
 

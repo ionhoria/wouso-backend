@@ -18,8 +18,7 @@
     "mysql2": "^1.5.3",
     "on-finished": "^2.3.0",
     "sequelize": "^4.37.10",
-    "winston": "^3.0.0",
-    "wouso-statistics-app": "ssh://github.com/razvanch/wouso-statistics-app.git"
+    "winston": "^3.0.0"
   },
   "scripts": {
     "dev": "nodemon --ignore ./test.js --ignore package.json --ignore node_modules --ignore package-lock.json index.js",
