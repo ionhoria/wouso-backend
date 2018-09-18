@@ -79,8 +79,11 @@ sessionsRouter.get('/:secret', async (req, res, next) => {
 })
 
 sessionsRouter.post('/', async (req, res) => {
-  const { id, adminId, name, start, end } = await Session.create(req.body)
-  res.json({ id, adminId, name, start, end })
+  const adminId = req.session.user.id
+  const {questions, ...quiz} = req.body
+  const session = await Session.create({...quiz, adminId})
+  await session.addQuestions(questions)
+  res.json({})
 })
 
 sessionsRouter.delete('/:id', async (req, res) => {

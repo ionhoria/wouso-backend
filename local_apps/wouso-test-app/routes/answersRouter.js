@@ -63,10 +63,4 @@ answersRouter.put('/grade', async (req, res) => {
   res.json({})
 })
 
-// answersRouter.put('/', async (req, res) => {
-//   const { id, text } = req.body[0]
-//   await Answer.update({ text }, { where: { id } })
-//   res.json({})
-// })
-
 module.exports = answersRouter
