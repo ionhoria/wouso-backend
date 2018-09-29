@@ -6,8 +6,8 @@ module.exports = {
     const router = require('express').Router()
 
     const questionsRouter = require('./routes/questionsRouter')
+    const answersRouter = require('./routes/answersRouter')
     const sessionsRouter = require('./routes/sessionsRouter')
-    const activeSessionsRouter = require('./routes/activeSessionsRouter')
 
     const cors = require('cors')
 
@@ -24,14 +24,14 @@ module.exports = {
     })
 
     router.use('/questions', questionsRouter)
+    router.use('/answers', answersRouter)
     router.use('/sessions', sessionsRouter)
-    router.use('/active', activeSessionsRouter)
 
-    this.logger.debug('wouso-treasure-hunt installed!')
+    this.logger.debug('wouso-quiz installed!')
 
     return router
   },
   uninstall: function () {
-    this.logger.debug('wouso-treasure-hunt uninstalled!')
+    this.logger.debug('wouso-quiz uninstalled!')
   }
 }

@@ -41,12 +41,12 @@ activeSessionsRouter.get('/:id', async (req, res, next) => {
     defaults: { sessionId, userId }
   }).spread((activeSession, created) => activeSession)
 
-  if (activeSession.createdAt < Date.now() - 100 * 1000) {
-    return next({ status: 400 })
-  }
+  // if (activeSession.createdAt < Date.now() - 100 * 1000) {
+  //   return next({ status: 400 })
+  // }
   payload.createdAt = activeSession.createdAt
 
-  const questions = await session.getThQuestions()
+  const questions = await session.getChoiceQuestions()
   payload['question'] = questions.find(question => {
     return question.thSessionQuestion.sortOrder === activeSession.question
   })
@@ -74,11 +74,13 @@ activeSessionsRouter.post('/', async (req, res, next) => {
   const activeSession = await ActiveSession.findOne({
     where: { sessionId, userId }
   })
-  if (!activeSession || activeSession.createdAt < Date.now() - 106 * 1000) {
+  if (
+    !activeSession /* || activeSession.createdAt < Date.now() - 106 * 1000 */
+  ) {
     return next({ status: 400 })
   }
 
-  const question = session.thQuestions.find(question => {
+  const question = session.choiceQuestions.find(question => {
     return question.thSessionQuestion.sortOrder === activeSession.question
   })
 

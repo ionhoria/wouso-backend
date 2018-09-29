@@ -36,7 +36,8 @@ answersRouter.post('/', async (req, res, next) => {
   // nu corespunde niciunei intrebari din quiz
   if (
     req.body.answers.some(
-      ({ questionId }) => !session.questions.some(({ id }) => questionId === id)
+      ({ questionId }) =>
+        !session.openQuestions.some(({ id }) => questionId === id)
     )
   ) {
     return next({ status: 400 })
@@ -60,14 +61,7 @@ answersRouter.put('/grade', async (req, res) => {
   Answer.bulkCreate(req.body, {
     updateOnDuplicate: ['grade']
   })
-  console.log(req.body)
   res.json({})
 })
-
-// answersRouter.put('/', async (req, res) => {
-//   const { id, text } = req.body[0]
-//   await Answer.update({ text }, { where: { id } })
-//   res.json({})
-// })
 
 module.exports = answersRouter

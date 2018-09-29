@@ -25,7 +25,7 @@ sessionsRouter.post('/', async (req, res, next) => {
   })
   // Waaaaay too many database queries :(
   questions.forEach(async ({ id, text }, index) => {
-    await session.addThQuestion(id, { through: { sortOrder: ++index } })
+    await session.addChoiceQuestion(id, { through: { sortOrder: ++index } })
   })
   // await session.addThQuestions(questions)
   res.json({ id: session.id, adminId, name })

@@ -9,9 +9,6 @@ module.exports = {
     const answersRouter = require('./routes/answersRouter')
     const sessionsRouter = require('./routes/sessionsRouter')
 
-    // const doShit = require('./demo')
-    // doShit()
-
     const cors = require('cors')
 
     router.use(
@@ -30,11 +27,11 @@ module.exports = {
     router.use('/answers', answersRouter)
     router.use('/sessions', sessionsRouter)
 
-    this.logger.debug('wouso-test-app installed!')
+    this.logger.debug('wouso-qotd installed!')
 
     return router
   },
   uninstall: function () {
-    this.logger.debug('wouso-test-app uninstalled!')
+    this.logger.debug('wouso-qotd uninstalled!')
   }
 }

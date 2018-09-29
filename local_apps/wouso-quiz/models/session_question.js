@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const { db } = require('../index')
 
-Session = db.define('sessions', {
+Session = db.define('quizSessions', {
   adminId: {
     type: Sequelize.INTEGER
   },
@@ -19,26 +19,16 @@ Session = db.define('sessions', {
   }
 })
 
-Question = db.define('questions', {
+Question = db.define('openQuestions', {
   text: {
     type: Sequelize.STRING
   }
 })
 
-const SessionQuestion = db.define('sessionQuestion', {
-  sessionId: {
-    type: Sequelize.INTEGER
-  },
-  questionId: {
-    type: Sequelize.INTEGER
-  }
-})
-
-Session.belongsToMany(Question, { through: SessionQuestion })
-Question.belongsToMany(Session, { through: SessionQuestion })
+Session.belongsToMany(Question, { through: 'quizSessionQuestions' })
+Question.belongsToMany(Session, { through: 'quizSessionQuestions' })
 
 Session.sync()
 Question.sync()
-SessionQuestion.sync()
 
 module.exports = { Session, Question }

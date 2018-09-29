@@ -32,9 +32,9 @@ const main = async () => {
     {
       username: 'intern',
       password: 'intern',
-      email: 'intern@gmail.com',
+      email: 'horiapaulion@gmail.com',
       firstName: 'Horia',
-      lastName: 'Intern'
+      lastName: 'Ion'
     }
   ]
 

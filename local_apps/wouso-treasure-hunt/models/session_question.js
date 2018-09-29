@@ -10,7 +10,7 @@ Session = db.define('thSessions', {
   }
 })
 
-Question = db.define('thQuestions', {
+Question = db.define('choiceQuestions', {
   text: {
     type: Sequelize.STRING
   },
@@ -26,7 +26,9 @@ const SessionQuestion = db.define('thSessionQuestion', {
   }
 })
 
-Session.belongsToMany(Question, { through: SessionQuestion })
+Session.belongsToMany(Question, {
+  through: SessionQuestion
+})
 Question.belongsToMany(Session, { through: SessionQuestion })
 
 Session.sync()

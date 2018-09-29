@@ -6,10 +6,9 @@ const Answer = require('../models/answer')
 
 const sessionsRouter = express.Router()
 
-// ToDo: Query by adminId
+// Maybe an admin should only see quizes he/she created?
 sessionsRouter.get('/', async (req, res) => {
   const sessionRecord = await Session.findAll({
-    // ToDo where: { adminId },
     attributes: ['id', 'adminId', 'secret', 'name', 'start', 'end']
   })
   res.json(sessionRecord)
@@ -38,7 +37,7 @@ sessionsRouter.get('/join/:secret', async (req, res, next) => {
   const { id: sessionId } = response
   const { id: userId } = req.session.user
 
-  response.questions = await session.getQuestions({
+  response.questions = await session.getOpenQuestions({
     attributes: ['id', 'text']
   })
 
@@ -67,7 +66,7 @@ sessionsRouter.get('/:secret', async (req, res, next) => {
 
   const response = session.toJSON()
 
-  response['questions'] = await session.getQuestions({
+  response['questions'] = await session.getOpenQuestions({
     attributes: ['id', 'text']
   })
   response['answers'] = await Answer.findAll({
@@ -80,9 +79,9 @@ sessionsRouter.get('/:secret', async (req, res, next) => {
 
 sessionsRouter.post('/', async (req, res) => {
   const adminId = req.session.user.id
-  const {questions, ...quiz} = req.body
-  const session = await Session.create({...quiz, adminId})
-  await session.addQuestions(questions)
+  const { questions, ...quiz } = req.body
+  const session = await Session.create({ ...quiz, adminId })
+  await session.addOpenQuestions(questions)
   res.json({})
 })
 

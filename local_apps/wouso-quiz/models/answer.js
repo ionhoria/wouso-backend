@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const { db } = require('../index')
 
-const Answer = db.define('answers', {
+const Answer = db.define('quizAnswers', {
   userId: {
     type: Sequelize.INTEGER,
     primaryKey: true
