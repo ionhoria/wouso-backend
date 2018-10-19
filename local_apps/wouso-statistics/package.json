@@ -1,0 +1,19 @@
+{
+  "name": "wouso-statistics-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:razvanch/wouso-statistics-app.git",
+    "type": "git"
+  },
+  "author": "Razvan Chitu <razvan.m.chitu@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.3"
+  },
+  "scripts": {
+    "dev": "nodemon --ignore wouso-core-backend server.js"
+  }
+}

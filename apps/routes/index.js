@@ -120,6 +120,7 @@ router.get(
       'wouso-quiz': 'wouso-quiz',
       'wouso-treasure-hunt': 'wouso-treasure-hunt',
       'wouso-qotd': 'wouso-qotd',
+      'wouso-statistics': 'wouso-statistics',
       ...(await getApps())
     }
 
@@ -194,6 +195,7 @@ const setupModules = async () => {
   mountLocalApp('wouso-quiz', '../../local_apps/wouso-quiz')
   mountLocalApp('wouso-treasure-hunt', '../../local_apps/wouso-treasure-hunt')
   mountLocalApp('wouso-qotd', '../../local_apps/wouso-qotd')
+  mountLocalApp('wouso-statistics', '../../local_apps/wouso-statistics')
 }
 
 setupModules()
