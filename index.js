@@ -7,6 +7,7 @@ const db = require('./db')
 const session = require('./session')
 const appsRouter = require('./apps/routes')
 const usersRouter = require('./users/routes')
+require('./setup')
 
 const app = express()
 
