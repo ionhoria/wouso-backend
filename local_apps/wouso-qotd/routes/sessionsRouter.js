@@ -22,6 +22,7 @@ sessionsRouter.get('/', async (req, res, next) => {
   let payload = {};
   const now = new Date().toISOString()
   const yesterday = new Date(Date.now() - 864e5).toISOString()
+
   let qotd = await Session.findOne({
     attributes: ['day'],
     include: { model: Question },
@@ -50,13 +51,15 @@ sessionsRouter.get('/', async (req, res, next) => {
       const existing = await Answer.findOne({ where: { day: qotd.day, userId } })
       if (existing) return next({ status: 400 })
 
-      payload = { day: qotd.day, text: qotd.choiceQuestion.text }
-      payload.answers = shuffle(
-        qotd.choiceQuestion.answers.invalid.concat(
-          qotd.choiceQuestion.answers.valid
-        )
-      )
     }
+  }
+  if (qotd){
+    payload = { day: qotd.day, text: qotd.choiceQuestion.text }
+    payload.answers = shuffle(
+      qotd.choiceQuestion.answers.invalid.concat(
+        qotd.choiceQuestion.answers.valid
+      )
+    )
   }
 
   res.json(payload)
