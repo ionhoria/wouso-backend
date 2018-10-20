@@ -19,7 +19,7 @@ const shuffle = array => {
 
 sessionsRouter.get('/', async (req, res, next) => {
   const userId = req.session.user.id
-
+  let payload = {};
   const now = new Date().toISOString()
   const yesterday = new Date(Date.now() - 864e5).toISOString()
   let qotd = await Session.findOne({
@@ -34,26 +34,30 @@ sessionsRouter.get('/', async (req, res, next) => {
   // so let's just generate a random one from our pool of multiple choice questions
   if (!qotd) {
     let question
-    while (!question) {
-      let count = await Question.count()
-      question = await Question.findById(Math.floor(Math.random() * count))
+    let questionsCount = await Question.count()
+
+    if(questionsCount > 0){
+      while (!question) {
+        question = await Question.findById(Math.floor(Math.random() * count))
+      }
+      qotd = await Session.create({
+        day: new Date().toDateString('en-US', { timeZone: 'Europe/Bucharest' }),
+        choiceQuestionId: question.id
+      })
+      qotd.choiceQuestion = question
+    
+
+      const existing = await Answer.findOne({ where: { day: qotd.day, userId } })
+      if (existing) return next({ status: 400 })
+
+      payload = { day: qotd.day, text: qotd.choiceQuestion.text }
+      payload.answers = shuffle(
+        qotd.choiceQuestion.answers.invalid.concat(
+          qotd.choiceQuestion.answers.valid
+        )
+      )
     }
-    qotd = await Session.create({
-      day: new Date().toDateString('en-US', { timeZone: 'Europe/Bucharest' }),
-      choiceQuestionId: question.id
-    })
-    qotd.choiceQuestion = question
   }
-
-  const existing = await Answer.findOne({ where: { day: qotd.day, userId } })
-  if (existing) return next({ status: 400 })
-
-  const payload = { day: qotd.day, text: qotd.choiceQuestion.text }
-  payload.answers = shuffle(
-    qotd.choiceQuestion.answers.invalid.concat(
-      qotd.choiceQuestion.answers.valid
-    )
-  )
 
   res.json(payload)
 })
