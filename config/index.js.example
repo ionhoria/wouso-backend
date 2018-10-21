@@ -7,13 +7,15 @@ module.exports = {
   database: {
     dialect: 'mysql',
     host: 'localhost',
+    port: '3306',
     name: 'wouso',
     username: 'wouso',
     password: 'wouso',
     logging: true
   },
   cors: {
-    origin: '*'
+    origin: 'http://localhost:3000',
+    credentials: true
   },
   session: {
     secret: 'wouso',

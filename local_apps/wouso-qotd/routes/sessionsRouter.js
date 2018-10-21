@@ -19,7 +19,7 @@ const shuffle = array => {
 
 sessionsRouter.get('/', async (req, res, next) => {
   const userId = req.session.user.id
-  let payload = {};
+  let payload = {}
   const now = new Date().toISOString()
   const yesterday = new Date(Date.now() - 864e5).toISOString()
 
@@ -37,23 +37,25 @@ sessionsRouter.get('/', async (req, res, next) => {
     let question
     let questionsCount = await Question.count()
 
-    if(questionsCount > 0){
+    if (questionsCount > 0) {
       while (!question) {
-        question = await Question.findById(Math.floor(Math.random() * count))
+        question = await Question.findById(
+          Math.floor(Math.random() * questionsCount)
+        )
       }
       qotd = await Session.create({
         day: new Date().toDateString('en-US', { timeZone: 'Europe/Bucharest' }),
         choiceQuestionId: question.id
       })
       qotd.choiceQuestion = question
-    
 
-      const existing = await Answer.findOne({ where: { day: qotd.day, userId } })
+      const existing = await Answer.findOne({
+        where: { day: qotd.day, userId }
+      })
       if (existing) return next({ status: 400 })
-
     }
   }
-  if (qotd){
+  if (qotd) {
     payload = { day: qotd.day, text: qotd.choiceQuestion.text }
     payload.answers = shuffle(
       qotd.choiceQuestion.answers.invalid.concat(
