@@ -1,3 +1,4 @@
+const shuffle = require('lodash/shuffle')
 const express = require('express')
 const Sequelize = require('sequelize')
 const { logger } = require('../index')
@@ -6,16 +7,6 @@ const { Session, Question } = require('../models/session_question')
 const { db } = require('../index')
 
 const sessionsRouter = express.Router()
-
-const shuffle = array => {
-  for (var i = array.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1))
-    var temp = array[i]
-    array[i] = array[j]
-    array[j] = temp
-  }
-  return array
-}
 
 sessionsRouter.get('/', async (req, res, next) => {
   const userId = req.session.user.id
