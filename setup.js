@@ -30,11 +30,18 @@ const main = async () => {
       lastName: 'Chitu'
     },
     {
-      username: 'intern',
-      password: 'intern',
+      username: 'horia.ion',
+      password: 'wouso',
       email: 'horiapaulion@gmail.com',
       firstName: 'Horia',
       lastName: 'Ion'
+    },
+    {
+      username: 'victor.ciurel',
+      password: 'wouso',
+      email: 'victor.ciurel@rosedu.org',
+      firstName: 'Victor',
+      lastName: 'Ciurel'
     }
   ]
 
