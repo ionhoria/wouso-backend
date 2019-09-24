@@ -1,25 +1,37 @@
 module.exports = {
   express: {
     port: 5000,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    https: {
+      keyPath: '',
+      certPath: '',
+      caPath: '',
+    },
   },
   winston: {},
   database: {
     dialect: 'mysql',
     host: 'localhost',
-    port: '3306',
-    name: 'wouso',
-    username: 'wouso',
-    password: 'wouso',
+    port: 3306,
+    name: '', 
+    username: '',
+    password: '',
     logging: true
   },
   cors: {
-    origin: 'http://localhost:3000',
+    origin: /.*/g,
+    optionsSuccessStatus: 200,
     credentials: true
   },
   session: {
-    secret: 'wouso',
+    secret: '',
     checkExpirationInterval: 15 * 60 * 1000,
-    expiration: 7 * 24 * 60 * 60 * 2000
+    expiration: 7 * 24 * 60 * 60 * 1000
+  },
+  ldap: {
+    url: '',
+    bindName: '',
+    bindPass: '',
+    base: ''
   }
 }

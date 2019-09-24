@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize')
-const db = require('../../db')
+const { db } = require('../index')
 
-Question = db.define('openQuestions', {
+Question = db.define('weeklyQuestions', {
   text: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false
   },
   answer: {

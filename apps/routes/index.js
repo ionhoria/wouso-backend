@@ -117,11 +117,10 @@ router.get(
   '/',
   catchAll(async (req, res, next) => {
     const apps = {
-      'wouso-quiz': 'wouso-quiz',
-      'wouso-treasure-hunt': 'wouso-treasure-hunt',
-      'wouso-qotd': 'wouso-qotd',
-      'wouso-challenge': 'wouso-challenge',
-      'wouso-statistics': 'wouso-statistics',
+      qotd: 'qotd',
+      weekly: 'weekly',
+      final: 'final',
+      challenge: 'challenge',
       ...(await getApps())
     }
 
@@ -132,7 +131,9 @@ router.get(
 router.post(
   '/',
   catchAll(async (req, res, next) => {
-    const { body: { url, replace } } = req
+    const {
+      body: { url, replace }
+    } = req
 
     let name = await urlToPackageName(url)
     if (name) {
@@ -160,7 +161,9 @@ router.post(
 router.delete(
   '/:app',
   catchAll(async (req, res, next) => {
-    const { params: { app: appName } } = req
+    const {
+      params: { app: appName }
+    } = req
 
     try {
       let app = require(appName)
@@ -193,11 +196,10 @@ router.delete(
 const setupModules = async () => {
   forOwn(await getApps(), (url, name) => mountApp(name, url))
 
-  mountLocalApp('wouso-quiz', '../../local_apps/wouso-quiz')
-  mountLocalApp('wouso-treasure-hunt', '../../local_apps/wouso-treasure-hunt')
-  mountLocalApp('wouso-qotd', '../../local_apps/wouso-qotd')
-  mountLocalApp('wouso-challenge', '../../local_apps/wouso-challenge')
-  mountLocalApp('wouso-statistics', '../../local_apps/wouso-statistics')
+  mountLocalApp('qotd', '../../local_apps/qotd')
+  mountLocalApp('weekly', '../../local_apps/weekly')
+  mountLocalApp('final', '../../local_apps/final')
+  mountLocalApp('challenge', '../../local_apps/challenge')
 }
 
 setupModules()

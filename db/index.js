@@ -20,13 +20,13 @@ const db = new Sequelize(
     operatorsAliases: false,
     logging: config.database.logging ? message => logger.debug(message) : false,
     define: {
-      engine: 'INNODB'
+      engine: 'INNODB',
+      charset: 'utf8'
     }
   }
 )
 
-db
-  .authenticate()
+db.authenticate()
   .then(() => {
     logger.info('Database connection has been established successfully.')
 

@@ -1,85 +1,103 @@
-const bcrypt = require('bcrypt')
-
+// const bcrypt = require('bcrypt')
+const ldap = require('ldapjs')
+const { url, bindName, bindPass, base } = require('../../config').ldap
 const db = require('../../db')
+const logger = require('../../logger')
 
-const User = db.define(
-  'users',
-  {
-    username: {
-      type: db.Sequelize.STRING,
-      unique: {
-        msg: 'This email is already registered.'
-      },
-      allowNull: false,
-      set (val) {
-        this.setDataValue('username', val.toLowerCase().trim())
-      }
+const User = db.define('users', {
+  username: {
+    type: db.Sequelize.STRING,
+    unique: {
+      msg: 'This username is already registered.'
     },
-    password: {
-      type: db.Sequelize.STRING,
-      allowNull: false
-    },
-    email: {
-      type: db.Sequelize.STRING,
-      set (val) {
-        this.setDataValue('email', val.toLowerCase().trim())
-      }
-    },
-    firstName: {
-      type: db.Sequelize.STRING
-    },
-    lastName: {
-      type: db.Sequelize.STRING,
-      defaultValue: 0
+    allowNull: false,
+    set (val) {
+      this.setDataValue('username', val.toLowerCase().trim())
     }
   },
-  { timestamps: false }
-)
-
-const hashPassword = (user, options) =>
-  new Promise((resolve, reject) => {
-    if (options.fields.indexOf('password') < 0) return resolve()
-
-    bcrypt.hash(user.getDataValue('password'), 10, function (err, hashed) {
-      if (err) return reject(err)
-
-      user.setDataValue('password', hashed)
-
-      resolve()
-    })
-  })
-
-User.beforeUpdate(hashPassword)
-User.beforeCreate(hashPassword)
+  email: {
+    type: db.Sequelize.STRING,
+    allowNull: false
+  },
+  firstName: {
+    type: db.Sequelize.STRING,
+    allowNull: false
+  },
+  lastName: {
+    type: db.Sequelize.STRING,
+    allowNull: false
+  },
+  score: {
+    type: db.Sequelize.INTEGER,
+    defaultValue: 60,
+    allowNull: false
+  },
+  elo: {
+    type: db.Sequelize.INTEGER,
+    defaultValue: 1000,
+    allowNull: false
+  }
+})
 
 delete User.bulkCreate
 
+// Performs LDAP authentication
 User.authenticate = (username, password) =>
-  new Promise((resolve, reject) =>
-    User.findOne({
-      where: { username }
+  new Promise((resolve, reject) => {
+    const client = ldap.createClient({ url })
+    client.on('error', err => {
+      return reject({})
     })
-      .then(user => {
-        if (!user) {
-          return reject({
-            message: 'There is no user with the given username.',
-            userExists: false
-          })
-        }
+    client.bind(bindName, bindPass, err => {
+      if (err) return reject({})
+    })
+    const searchOptions = {
+      scope: 'sub',
+      filter: `uid=${username}`,
+      sizeLimit: 1,
+      attributes: ['uid', 'givenName', 'sn', 'mail']
+    }
 
-        bcrypt.compare(
-          password,
-          user.getDataValue('password'),
-          (err, result) =>
-            (result
-              ? resolve(user)
-              : reject({
-                message: 'The password is incorrect.',
-                userExists: true
-              }))
-        )
+    client.search(base, searchOptions, (err, res) => {
+      if (err) return reject({})
+      let user = null
+      res.on('searchEntry', entry => {
+        user = entry.object
       })
-      .catch(reject)
-  )
+      res.on('searchReference', referral => {
+        client.unbind(err => {})
+        return reject({})
+      })
+      res.on('error', err => {
+        client.unbind(err => {})
+        return reject({})
+      })
+      res.on('end', async result => {
+        if (!user || result.status != 0) return reject({})
+        client.bind(user.dn, password, err => {
+          if (err) return reject({})
+        })
+        await User.findOrCreate({
+          where: { username: user.uid },
+          defaults: {
+            username: user.uid,
+            email: user.mail,
+            firstName: user.givenName,
+            lastName: user.sn
+          }
+        })
+          .spread((user, created) => {
+            if (created) logger.info(`Created user for ${user.username}`)
+            resolve(user)
+          })
+          .catch(() => reject({}))
+        client.unbind(err => {
+          logger.error('Final ldap unbind failed!')
+        })
+      })
+    })
+  })
+
+User.sync()
 
 module.exports = User
