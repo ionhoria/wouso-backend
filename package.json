@@ -25,7 +25,7 @@
     "winston": "^3.2.1"
   },
   "scripts": {
-    "dev": "sequelize db:migrate && NODE_ENV=development nodemon --ignore ./test.js --ignore package.json --ignore node_modules --ignore package-lock.json index_http.js",
+    "dev": "NODE_ENV=development nodemon --ignore ./test.js --ignore package.json --ignore node_modules --ignore package-lock.json index_http.js",
     "start": "NODE_ENV=production node index_https.js"
   }
 }
