@@ -1,6 +1,6 @@
 // const bcrypt = require('bcrypt')
 const ldap = require('ldapjs')
-const { url, bindName, bindPass, base } = require('../../config').ldap
+const ldapConfig = require('../../config').ldap
 const db = require('../../db')
 const logger = require('../../logger')
 
@@ -42,8 +42,8 @@ const User = db.define('users', {
 delete User.bulkCreate
 
 // Performs LDAP authentication
-User.authenticate = (username, password) =>
-  new Promise((resolve, reject) => {
+User.authenticate = (username, password) =>{
+  return new Promise((resolve, reject) => {
     const client = ldap.createClient({ url })
     client.on('error', err => {
       return reject({})
@@ -97,7 +97,7 @@ User.authenticate = (username, password) =>
       })
     })
   })
-
+}
 User.sync()
 
 module.exports = User
