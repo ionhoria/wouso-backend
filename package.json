@@ -18,7 +18,7 @@
     "mysql2": "^1.5.3",
     "nodemon": "^1.18.4",
     "on-finished": "^2.3.0",
-    "sequelize": "^4.37.10",
+    "sequelize": "^5.15.1",
     "winston": "^3.0.0"
   },
   "scripts": {
